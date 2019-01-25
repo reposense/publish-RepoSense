@@ -1,3 +1,5 @@
 reposense-report/
 RepoSense/
 reposense/
+.idea/
+*.iml
