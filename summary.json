@@ -1,0 +1,21 @@
+{
+  "repoSenseVersion": "v1.10.1",
+  "reportGeneratedTime": "Mon Dec 30 05:16:50 2019 UTC",
+  "repos": [
+    {
+      "location": {
+        "location": "https://github.com/reposense/RepoSense.git",
+        "repoName": "RepoSense",
+        "organization": "reposense"
+      },
+      "branch": "master",
+      "displayName": "reposense/RepoSense[master]",
+      "outputFolderName": "reposense_RepoSense_master"
+    }
+  ],
+  "errorList": [],
+  "sinceDate": "2019-11-30",
+  "untilDate": "2019-12-30",
+  "isSinceDateProvided": false,
+  "isUntilDateProvided": false
+}
