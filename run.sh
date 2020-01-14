@@ -7,7 +7,7 @@
 ### ./get-reposense.py --tag v1.6.1            # Gets a specific version
 ### ./get-reposense.py --release --overwrite   # Overwrite RepoSense.jar, if exists, with the latest release
 
-./get-reposense.py --release
+./get-reposense.py --master
 
 # Executes RepoSense
 # Do not change the default output folder name (reposense-report)
