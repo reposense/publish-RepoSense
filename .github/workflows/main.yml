@@ -25,6 +25,7 @@ jobs:
       run: bash ./run.sh
     - name: Deploy GitHub pages
       run: |
-        export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }}
-        export GITHUB_DEPLOY_KEY=${{ secrets.DEPLOY_KEY }}
-        bash ./configs/ghactions/deploy_github_pages.sh
+        export TOKEN=${{ secrets.ACCESS_TOKEN }}
+        export DEPLOY_KEY=${{ secrets.DEPLOY_KEY }}
+        source ./configs/github.sh
+        source ./configs/deploy.sh
