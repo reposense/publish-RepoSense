@@ -11,8 +11,8 @@ fi;
 cd reposense-report
 
 git init
-git config user.name "${GIT_USERNAME}"
-git config user.email "${GIT_EMAIL}"
+git config user.name "$GIT_USERNAME"
+git config user.email "$GIT_EMAIL"
 git config core.sshCommand "ssh -i ~/id_git -F /dev/null"
 
 if [ -z "$TOKEN" ]; then
@@ -44,5 +44,5 @@ if changes=$(git status --porcelain) && [ -z "$changes" ]; then
 fi
 
 git add -A .
-git commit -m "Rebuild pages at ${COMMIT}"
+git commit -m "Rebuild pages at $COMMIT"
 git push --quiet upstream HEAD:gh-pages
