@@ -4,7 +4,7 @@
 set -o errexit # exit with nonzero exit code if any line fails
 
 if [ -z "$TOKEN" ] && [ -z "$DEPLOY_KEY" ]; then
-  echo "${TOKEN_NAME} or ${DEPLOY_KEY_NAME} is not set up in ${ENV_NAME}. Skipping deploy."
+  echo "$TOKEN_NAME or $DEPLOY_KEY_NAME is not set up in $ENV_NAME. Skipping deploy."
   exit 0
 fi;
 
