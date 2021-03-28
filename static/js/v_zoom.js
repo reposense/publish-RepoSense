@@ -1,37 +1,70 @@
+/* global Vuex */
+
+function initialState() {
+  return {
+    showAllCommitMessageBody: true,
+    expandedCommitMessagesCount: this.totalCommitMessageBodyCount,
+    commitsSortType: 'time',
+    toReverseSortedCommits: true,
+    isCommitsFinalized: false,
+    selectedFileTypes: [],
+    fileTypes: [],
+  };
+}
+
 window.vZoom = {
-  props: ['info'],
   template: window.$('v_zoom').innerHTML,
   data() {
-    return {
-      filterTimeFrame: window.hashParams.timeframe,
-      showAllCommitMessageBody: true,
-      expandedCommitMessagesCount: this.getCommitMessageBodyCount(),
-    };
+    return initialState();
   },
-  methods: {
-    openSummary() {
-      this.$emit('view-summary', this.info.sinceDate, this.info.untilDate);
+
+  computed: {
+    zoomOwnerWatchable() {
+      return `${this.info.zRepo}|${this.info.zAuthor}|${this.info.zFilterGroup}|${this.info.zTimeFrame}`;
     },
 
-    filterCommits() {
-      const { user } = this.info;
-      const date = this.filterTimeFrame === 'week' ? 'endDate' : 'date';
-      const filtered = user.commits.filter(
-          (commit) => commit[date] >= this.info.sinceDate && commit[date] <= this.info.untilDate,
-      );
-      user.commits = filtered;
-    },
+    sortingFunction() {
+      const commitSortFunction = this.commitsSortType === 'time'
+        ? (commit) => commit.date
+        : (commit) => commit.insertions;
 
-    getSliceLink(slice) {
-      if (this.info.isMergeGroup) {
-        return `${window.getBaseLink(slice.repoId)}/commit/${slice.hash}`;
-      }
-      return `${window.getBaseLink(this.info.user.repoId)}/commit/${slice.hash}`;
+      return (a, b) => (this.toReverseSortedCommits ? -1 : 1)
+        * window.comparator(commitSortFunction)(a, b);
     },
+    filteredUser() {
+      const {
+        zUser, zSince, zUntil, zTimeFrame,
+      } = this.info;
+      const filteredUser = Object.assign({}, zUser);
 
-    getCommitMessageBodyCount() {
+      const date = zTimeFrame === 'week' ? 'endDate' : 'date';
+      filteredUser.commits = zUser.commits.filter(
+          (commit) => commit[date] >= zSince && commit[date] <= zUntil,
+      ).sort(this.sortingFunction);
+
+      return filteredUser;
+    },
+    selectedCommits() {
+      const commits = [];
+      this.filteredUser.commits.forEach((commit) => {
+        const filteredCommit = { ...commit };
+        filteredCommit.commitResults = [];
+        commit.commitResults.forEach((slice) => {
+          if (Object.keys(slice.fileTypesAndContributionMap).some(
+              (fileType) => this.selectedFileTypes.indexOf(fileType) !== -1,
+          )) {
+            filteredCommit.commitResults.push(slice);
+          }
+        });
+        if (filteredCommit.commitResults.length > 0) {
+          commits.push(filteredCommit);
+        }
+      });
+      return commits;
+    },
+    totalCommitMessageBodyCount() {
       let nonEmptyCommitMessageCount = 0;
-      this.info.user.commits.forEach((commit) => {
+      this.selectedCommits.forEach((commit) => {
         commit.commitResults.forEach((commitResult) => {
           if (commitResult.messageBody !== '') {
             nonEmptyCommitMessageCount += 1;
@@ -41,32 +74,194 @@ window.vZoom = {
 
       return nonEmptyCommitMessageCount;
     },
+    isSelectAllChecked: {
+      get() {
+        return this.selectedFileTypes.length === this.fileTypes.length;
+      },
+      set(value) {
+        if (value) {
+          this.selectedFileTypes = this.fileTypes.slice();
+        } else {
+          this.selectedFileTypes = [];
+        }
+        this.updateSelectedFileTypesHash();
+      },
+    },
+
+    ...Vuex.mapState({
+      fileTypeColors: 'fileTypeColors',
+      info: 'tabZoomInfo',
+    }),
+  },
+
+  watch: {
+    zoomOwnerWatchable() {
+      Object.assign(this.$data, initialState());
+      this.initiate();
+      this.setInfoHash();
+    },
+
+    selectedFileTypes() {
+      this.$nextTick(() => {
+        this.updateExpandedCommitMessagesCount();
+      });
+    },
+    commitsSortType() {
+      window.addHash('zCST', this.commitsSortType);
+      window.encodeHash();
+    },
+    toReverseSortedCommits() {
+      window.addHash('zRSC', this.toReverseSortedCommits);
+      window.encodeHash();
+    },
+  },
+
+  methods: {
+    initiate() {
+      if (this.info.zUser) {
+        // This code should always run since zUser must be defined
+        this.updateFileTypes();
+        this.selectedFileTypes = this.fileTypes.slice();
+      }
+
+      this.updateFileTypes();
+      this.selectedFileTypes = this.fileTypes.slice();
+    },
+
+    openSummary() {
+      const info = { since: this.info.zSince, until: this.info.zUntil };
+      this.$store.commit('updateSummaryDates', info);
+    },
+
+    getSliceLink(slice) {
+      if (this.info.zIsMerge) {
+        return `${window.getBaseLink(slice.repoId)}/commit/${slice.hash}`;
+      }
+      return `${window.getBaseLink(this.info.zUser.repoId)}/commit/${slice.hash}`;
+    },
+
+    scrollToCommit(tag, commit) {
+      const el = this.$el.getElementsByClassName(`${commit} ${tag}`)[0];
+      if (el) {
+        el.focus();
+      }
+    },
+
+    updateFileTypes() {
+      const commitsFileTypes = new Set();
+      this.filteredUser.commits.forEach((commit) => {
+        commit.commitResults.forEach((slice) => {
+          Object.keys(slice.fileTypesAndContributionMap).forEach((fileType) => {
+            commitsFileTypes.add(fileType);
+          });
+        });
+      });
+      this.fileTypes = Object.keys(this.filteredUser.fileTypeContribution).filter(
+          (fileType) => commitsFileTypes.has(fileType),
+      );
+    },
+
+    retrieveHashes() {
+      this.retrieveSortHash();
+      this.retrieveSelectedFileTypesHash();
+    },
+
+    retrieveSortHash() {
+      const hash = window.hashParams;
+      if (hash.zCST) {
+        this.commitsSortType = hash.zCST;
+      }
+      if (hash.zRSC) {
+        this.toReverseSortedCommits = (hash.zRSC === 'true');
+      }
+    },
+
+    retrieveSelectedFileTypesHash() {
+      const hash = window.hashParams;
+
+      if (hash.zFT) {
+        this.selectedFileTypes = hash.zFT
+            .split(window.HASH_DELIMITER)
+            .filter((fileType) => this.fileTypes.includes(fileType));
+      }
+    },
+
+    updateSelectedFileTypesHash() {
+      const fileTypeHash = this.selectedFileTypes.length > 0
+          ? this.selectedFileTypes.reduce((a, b) => `${a}~${b}`)
+          : '';
+
+      window.addHash('zFT', fileTypeHash);
+      window.encodeHash();
+    },
+
+    setInfoHash() {
+      const { addHash, encodeHash } = window;
+      const {
+        zAvgCommitSize, zSince, zUntil, zFilterGroup,
+        zTimeFrame, zIsMerge, zAuthor, zRepo, zFromRamp, zFilterSearch,
+      } = this.info;
+
+      addHash('zA', zAuthor);
+      addHash('zR', zRepo);
+      addHash('zACS', zAvgCommitSize);
+      addHash('zS', zSince);
+      addHash('zFS', zFilterSearch);
+      addHash('zU', zUntil);
+      addHash('zMG', zIsMerge);
+      addHash('zFTF', zTimeFrame);
+      addHash('zFGS', zFilterGroup);
+      addHash('zFR', zFromRamp);
+      encodeHash();
+    },
 
     toggleAllCommitMessagesBody(isActive) {
       this.showAllCommitMessageBody = isActive;
 
-      const toRename = this.showAllCommitMessageBody ? 'commit-message active' : 'commit-message';
+      const toRename = this.showAllCommitMessageBody ? 'commit-message message-body active' : 'commit-message message-body';
 
-      const commitMessageClasses = document.getElementsByClassName('commit-message');
+      const commitMessageClasses = document.getElementsByClassName('commit-message message-body');
       Array.from(commitMessageClasses).forEach((commitMessageClass) => {
         commitMessageClass.className = toRename;
       });
 
-      this.expandedCommitMessagesCount = isActive ? this.getCommitMessageBodyCount() : 0;
+      this.expandedCommitMessagesCount = isActive ? this.totalCommitMessageBodyCount : 0;
     },
 
     updateExpandedCommitMessagesCount() {
-      this.expandedCommitMessagesCount = document.getElementsByClassName('commit-message active')
+      this.expandedCommitMessagesCount = document.getElementsByClassName('commit-message message-body active')
           .length;
+    },
+
+    removeZoomHashes() {
+      window.removeHash('zA');
+      window.removeHash('zR');
+      window.removeHash('zFS');
+      window.removeHash('zACS');
+      window.removeHash('zS');
+      window.removeHash('zU');
+      window.removeHash('zFGS');
+      window.removeHash('zFTF');
+      window.removeHash('zMG');
+      window.removeHash('zFT');
+      window.removeHash('zCST');
+      window.removeHash('zRSC');
+      window.encodeHash();
+    },
+
+    filterSelectedFileTypes(fileTypes) {
+      return fileTypes.filter((fileType) => this.selectedFileTypes.includes(fileType));
     },
   },
   created() {
-    this.filterCommits();
+    this.initiate();
+    this.retrieveHashes();
+    this.setInfoHash();
   },
-  mounted() {
-    this.updateExpandedCommitMessagesCount();
+  beforeDestroy() {
+    this.removeZoomHashes();
   },
   components: {
-    v_ramp: window.vRamp,
+    vRamp: window.vRamp,
   },
 };

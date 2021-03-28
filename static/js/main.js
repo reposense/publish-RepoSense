@@ -1,89 +1,6 @@
-window.REPORT_ZIP = null;
-window.REPOS = {};
-window.isMacintosh = navigator.platform.includes('Mac');
-
-window.hashParams = {};
-window.addHash = function addHash(newKey, newVal) {
-  window.hashParams[newKey] = newVal;
-};
-window.removeHash = function removeHash(key) {
-  delete window.hashParams[key];
-};
-
-window.encodeHash = function encodeHash() {
-  const { hashParams } = window;
-
-  window.location.hash = Object.keys(hashParams)
-      .map((key) => `${key}=${encodeURIComponent(hashParams[key])}`)
-      .join('&');
-};
-
-window.decodeHash = function decodeHash() {
-  const hashParams = {};
-
-  window.location.hash.slice(1).split('&')
-      .forEach((param) => {
-        const [key, val] = param.split('=');
-        if (key) {
-          try {
-            hashParams[key] = decodeURIComponent(val);
-          } catch (error) {
-            this.userUpdated = false;
-            this.isLoading = false;
-          }
-        }
-      });
-  window.hashParams = hashParams;
-};
-
-const DRAG_BAR_WIDTH = 13.25;
-const SCROLL_BAR_WIDTH = 17;
-const GUIDE_BAR_WIDTH = 2;
-
-const throttledEvent = (delay, handler) => {
-  let lastCalled = 0;
-  return (...args) => {
-    if (Date.now() - lastCalled > delay) {
-      lastCalled = Date.now();
-      handler(...args);
-    }
-  };
-};
-
-let guideWidth = (0.5 * window.innerWidth - (GUIDE_BAR_WIDTH / 2))
-    / window.innerWidth;
-let flexWidth = 0.5;
-
-window.mouseMove = () => {};
-window.registerMouseMove = () => {
-  const innerMouseMove = (event) => {
-    guideWidth = (
-      Math.min(
-          Math.max(
-              window.innerWidth - event.clientX,
-              SCROLL_BAR_WIDTH + DRAG_BAR_WIDTH,
-          ),
-          window.innerWidth - SCROLL_BAR_WIDTH,
-      )
-        - (GUIDE_BAR_WIDTH / 2)
-    ) / window.innerWidth;
-    window.$('tab-resize-guide').style.right = `${guideWidth * 100}%`;
-  };
-  window.$('tab-resize-guide').style.display = 'block';
-  window.$('app-wrapper').style['user-select'] = 'none';
-  window.mouseMove = throttledEvent(30, innerMouseMove);
-};
-
-window.deregisterMouseMove = () => {
-  flexWidth = (guideWidth * window.innerWidth + (GUIDE_BAR_WIDTH / 2))
-        / window.innerWidth;
-  window.mouseMove = () => {};
-  if (window.$('tabs-wrapper')) {
-    window.$('tabs-wrapper').style.flex = `0 0 ${flexWidth * 100}%`;
-  }
-  window.$('tab-resize-guide').style.display = 'none';
-  window.$('app-wrapper').style['user-select'] = 'auto';
-};
+/* global Vuex */
+// eslint-disable-next-line import/extensions
+import store from './store.js';
 
 /* global Vue hljs */
 Vue.directive('hljs', {
@@ -95,24 +12,42 @@ Vue.directive('hljs', {
   },
 });
 
+Vue.component('font-awesome-icon', window['vue-fontawesome'].FontAwesomeIcon);
+Vue.component('loading-overlay', window.VueLoading);
+
+const loadingResourcesMessage = 'Loading resources...';
+
 window.app = new window.Vue({
   el: '#app',
+  store,
   data: {
     repos: {},
     users: [],
-    repoLength: 0,
-    loadedRepo: 0,
     userUpdated: false,
 
-    isLoading: false,
-    isCollapsed: false,
+    isLoadingOverlayEnabled: false,
+    loadingOverlayOpacity: 1,
+
     isTabActive: true, // to force tab wrapper to load
 
     tabType: 'empty',
-    tabInfo: {},
     creationDate: '',
 
     errorMessages: {},
+  },
+  watch: {
+    '$store.state.tabZoomInfo': function () {
+      if (this.$store.state.tabZoomInfo.isRefreshing) {
+        return;
+      }
+      this.activateTab('zoom');
+    },
+    '$store.state.tabAuthorshipInfo': function () {
+      this.activateTab('authorship');
+    },
+    '$store.state.loadingOverlayCount': function () {
+      this.isLoadingOverlayEnabled = this.$store.state.loadingOverlayCount > 0;
+    },
   },
   methods: {
     // model functions //
@@ -126,37 +61,38 @@ window.app = new window.Vue({
             window.alert('Either the .zip file is corrupted, or you uploaded a .zip file that is not generated '
                 + 'by RepoSense.');
           })
-          .then(() => this.updateReportView().then(() => this.renderTabHash()));
+          .then(() => this.updateReportView());
     },
+
     updateReportDir() {
       window.REPORT_ZIP = null;
 
       this.users = [];
-      this.updateReportView().then(() => this.renderTabHash());
+      this.updateReportView();
     },
+
     async updateReportView() {
-      await window.api.loadSummary().then((names) => {
+      this.$store.commit('incrementLoadingOverlayCount', 1);
+      this.$store.commit('updateLoadingOverlayMessage', loadingResourcesMessage);
+      this.userUpdated = false;
+      try {
+        const names = await window.api.loadSummary();
+        if (names === null) {
+          return;
+        }
         this.repos = window.REPOS;
-        this.repoLength = Object.keys(window.REPOS).length;
-        this.loadedRepo = 0;
-
-        this.userUpdated = false;
-        this.isLoading = true;
-        this.loadedRepo = 0;
-
-        return Promise.all(names.map((name) => (
+        await Promise.all(names.map((name) => (
           window.api.loadCommits(name)
-              .then(() => { this.loadedRepo += 1; })
         )));
-      }).then(() => {
-        this.userUpdated = true;
-        this.isLoading = false;
+        this.loadingOverlayOpacity = 0.5;
         this.getUsers();
-      }).catch((error) => {
-        this.userUpdated = false;
-        this.isLoading = false;
+        this.renderTabHash();
+        this.userUpdated = true;
+      } catch (error) {
         window.alert(error);
-      });
+      } finally {
+        this.$store.commit('incrementLoadingOverlayCount', -1);
+      }
     },
     getUsers() {
       const full = [];
@@ -170,14 +106,11 @@ window.app = new window.Vue({
 
     // handle opening of sidebar //
     activateTab(tabName) {
-      // changing isTabActive to trigger redrawing of component
-      this.isTabActive = false;
-      if (document.getElementById('tabs-wrapper')) {
-        document.getElementById('tabs-wrapper').scrollTop = 0;
+      if (this.$refs.tabWrapper) {
+        this.$refs.tabWrapper.scrollTop = 0;
       }
 
       this.isTabActive = true;
-      this.isCollapsed = false;
       this.tabType = tabName;
 
       window.addHash('tabOpen', this.isTabActive);
@@ -188,24 +121,8 @@ window.app = new window.Vue({
     deactivateTab() {
       this.isTabActive = false;
       window.addHash('tabOpen', this.isTabActive);
-      window.removeHash('tabAuthor');
-      window.removeHash('tabRepo');
       window.removeHash('tabType');
       window.encodeHash();
-    },
-
-    updateTabAuthorship(obj) {
-      this.tabInfo.tabAuthorship = Object.assign({}, obj);
-      this.activateTab('authorship');
-    },
-    updateTabZoom(obj) {
-      this.tabInfo.tabZoom = Object.assign({}, obj);
-      this.activateTab('zoom');
-    },
-
-    // updating summary view
-    updateSummaryDates(since, until) {
-      this.$refs.summary.updateDateRange(since, until);
     },
 
     renderAuthorShipTabHash(minDate, maxDate) {
@@ -213,19 +130,43 @@ window.app = new window.Vue({
       const info = {
         author: hash.tabAuthor,
         repo: hash.tabRepo,
+        isMergeGroup: hash.authorshipIsMergeGroup === 'true',
+        isRefresh: true,
         minDate,
         maxDate,
       };
-      const tabInfoLength = Object.values(info).filter((x) => x).length;
+      const tabInfoLength = Object.values(info).filter((x) => x !== null).length;
       if (Object.keys(info).length === tabInfoLength) {
-        this.updateTabAuthorship(info);
+        this.$store.commit('updateTabAuthorshipInfo', info);
+      } else if (hash.tabOpen === 'false' || tabInfoLength > 2) {
+        window.app.isTabActive = false;
+      }
+    },
+
+    renderZoomTabHash() {
+      const hash = window.hashParams;
+      const zoomInfo = {
+        isRefreshing: true,
+        zAuthor: hash.zA,
+        zRepo: hash.zR,
+        zAvgCommitSize: hash.zACS,
+        zSince: hash.zS,
+        zUntil: hash.zU,
+        zFilterGroup: hash.zFGS,
+        zFilterSearch: hash.zFS,
+        zTimeFrame: hash.zFTF,
+        zIsMerge: hash.zMG === 'true',
+        zFromRamp: hash.zFR === 'true',
+      };
+      const tabInfoLength = Object.values(zoomInfo).filter((x) => x !== null).length;
+      if (Object.keys(zoomInfo).length === tabInfoLength) {
+        this.$store.commit('updateTabZoomInfo', zoomInfo);
       } else if (hash.tabOpen === 'false' || tabInfoLength > 2) {
         window.app.isTabActive = false;
       }
     },
 
     renderTabHash() {
-      window.decodeHash();
       const hash = window.hashParams;
       if (!hash.tabOpen) {
         return;
@@ -241,28 +182,44 @@ window.app = new window.Vue({
           until = until || window.app.untilDate;
           this.renderAuthorShipTabHash(since, until);
         } else {
-          // handle zoom tab if needed
+          this.renderZoomTabHash();
         }
       }
     },
 
-    generateKey(dataObj) {
-      return JSON.stringify(dataObj);
-    },
-
     getRepoSenseHomeLink() {
-      return 'http://reposense.org';
-    },
-
-    getRepoSenseVersionLink() {
       const version = window.app.repoSenseVersion;
       if (!version) {
-        return 'https://github.com/reposense/RepoSense';
+        return `${window.HOME_PAGE_URL}/RepoSense/`;
+      }
+      return `${window.HOME_PAGE_URL}`;
+    },
+
+    getSpecificCommitLink() {
+      const version = window.app.repoSenseVersion;
+      if (!version) {
+        return `${window.BASE_URL}/reposense/RepoSense`;
       }
       if (version.startsWith('v')) {
-        return `https://github.com/reposense/RepoSense/releases/tag/${version}`;
+        return `${window.BASE_URL}/reposense/RepoSense/releases/tag/${version}`;
       }
-      return `https://github.com/reposense/RepoSense/commits/${version}`;
+      return `${window.BASE_URL}/reposense/RepoSense/commit/${version}`;
+    },
+
+    getUserGuideLink() {
+      const version = window.app.repoSenseVersion;
+      if (!version) {
+        return `${window.HOME_PAGE_URL}/RepoSense/ug/index.html`;
+      }
+      return `${window.HOME_PAGE_URL}/ug/index.html`;
+    },
+
+    getUsingReportsUserGuideLink() {
+      const version = window.app.repoSenseVersion;
+      if (!version) {
+        return `${window.HOME_PAGE_URL}/RepoSense/ug/usingReports.html`;
+      }
+      return `${window.HOME_PAGE_URL}/ug/usingReports.html`;
     },
 
     receiveDates(dates) {
@@ -273,20 +230,19 @@ window.app = new window.Vue({
       }
     },
   },
+
+  computed: {
+    ...Vuex.mapState(['loadingOverlayMessage']),
+  },
+
   components: {
-    v_zoom: window.vZoom,
-    v_summary: window.vSummary,
-    v_authorship: window.vAuthorship,
-    CircleSpinner: window.VueLoadingSpinner.Circle,
+    vResizer: window.vResizer,
+    vZoom: window.vZoom,
+    vSummary: window.vSummary,
+    vAuthorship: window.vAuthorship,
   },
   created() {
+    window.decodeHash();
     this.updateReportDir();
-  },
-  updated() {
-    this.$nextTick(() => {
-      if (window.$('tabs-wrapper')) {
-        window.$('tabs-wrapper').style.flex = `0 0 ${flexWidth * 100}%`;
-      }
-    });
   },
 });
