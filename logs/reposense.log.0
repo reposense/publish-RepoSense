@@ -1,0 +1,108 @@
+Jul 03, 2024 9:22:12 PM reposense.RepoSense main
+WARNING: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+reposense.parser.ParseException: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:141)
+	at reposense.RepoSense.main(RepoSense.java:35)
+
+Jul 03, 2024 9:22:57 PM reposense.RepoSense main
+WARNING: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+reposense.parser.ParseException: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:141)
+	at reposense.RepoSense.main(RepoSense.java:35)
+
+Jul 03, 2024 9:34:01 PM reposense.RepoSense main
+WARNING: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+reposense.parser.ParseException: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:141)
+	at reposense.RepoSense.main(RepoSense.java:35)
+
+Jul 03, 2024 9:35:11 PM reposense.RepoSense main
+WARNING: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+reposense.parser.ParseException: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:141)
+	at reposense.RepoSense.main(RepoSense.java:35)
+
+Jul 03, 2024 9:35:28 PM reposense.RepoSense main
+WARNING: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+reposense.parser.ParseException: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:141)
+	at reposense.RepoSense.main(RepoSense.java:35)
+
+Jul 03, 2024 9:35:49 PM reposense.RepoSense main
+WARNING: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+reposense.parser.ParseException: usage: java -jar RepoSense.jar [-h] [-view [PATH]] [-output PATH]
+                               [-since dd/MM/yyyy] [-until dd/MM/yyyy]
+                               [-formats [FORMAT [FORMAT ...]]]
+                               [--ignore-standalone-config] [-config PATH |
+                               -repo LOCATION [LOCATION ...]]
+unrecognized arguments: '--config'
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:141)
+	at reposense.RepoSense.main(RepoSense.java:35)
+
