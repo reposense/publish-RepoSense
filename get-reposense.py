@@ -25,6 +25,7 @@ def parse_args():
 
 def handle_latest_tag(tag):
     page = 1
+    major = tag.strip('. ').split('.')
     while True:
         response = requests.get(f'https://api.github.com/repos/reposense/RepoSense/releases?per_page=100&page={page}')
         if response.status_code in [403, 500]:
@@ -36,8 +37,7 @@ def handle_latest_tag(tag):
             exit(1)
         for i in releases:
             release_tag = i['tag_name']
-            if release_tag[:len(tag)] == tag and \
-                    not (release_tag[len(tag):len(tag)+1].isdigit() and tag[-1].isdigit()):
+            if release_tag.strip('. ').split('.')[:len(major)] == major:
                 handle_specific_release(release_tag)
                 exit()
         page += 1
