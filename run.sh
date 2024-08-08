@@ -5,7 +5,7 @@
 ### ./get-reposense.py --release               # Gets the latest release (Stable)
 ### ./get-reposense.py --master                # Gets the latest master (Beta)
 ### ./get-reposense.py --tag v1.6.1            # Gets a specific version
-### ./get-reposense.py --latest v1.6           # Gets the latest version of a specific tag
+### ./get-reposense.py --latest v1.6           # Gets the latest version with the given version prefix e.g., v1.6.1
 ### ./get-reposense.py --commit abc123         # Gets a specific commit
 ### ./get-reposense.py --release --overwrite   # Overwrite RepoSense.jar, if exists, with the latest release
 
