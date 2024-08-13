@@ -1,17 +1,17 @@
-Aug 01, 2024 4:19:15 PM reposense.system.LogsManager addFileHandler
+Aug 13, 2024 12:17:00 PM reposense.system.LogsManager addFileHandler
 INFO: Log temp folder has been successfully created
-Aug 01, 2024 4:19:15 PM reposense.parser.CsvParser validateHeader
+Aug 13, 2024 12:17:01 PM reposense.parser.CsvParser validateHeader
 INFO: Parsed header of CSV file, repo-config.csv, and recognized columns: Ignore Standalone Config,  Repository's Location,  Skip Ignored File Analysis,  Branch,  Shallow Cloning,  File formats,  Ignore Glob List,  Ignore Authors List,  Find Previous Authors,  File Size Limit,  Ignore File Size Limit,  Ignore Commits List
-Aug 01, 2024 4:19:15 PM reposense.parser.CsvParser validateHeader
+Aug 13, 2024 12:17:01 PM reposense.parser.CsvParser validateHeader
 INFO: Parsed header of CSV file, author-config.csv, and recognized columns: Author's Emails,  Repository's Location,  Branch,  Author's Git Host ID,  Author's Display Name,  Ignore Glob List,  Author's Git Author Name
-Aug 01, 2024 4:19:15 PM reposense.model.ConfigRunConfiguration getRepoConfigurations
+Aug 13, 2024 12:17:01 PM reposense.model.ConfigRunConfiguration getRepoConfigurations
 WARNING: No valid configurations in the author-config.csv.
 reposense.parser.exceptions.InvalidCsvException: No valid configurations in the author-config.csv.
 	at reposense.parser.CsvParser.parse(CsvParser.java:115)
 	at reposense.model.ConfigRunConfiguration.getRepoConfigurations(ConfigRunConfiguration.java:50)
 	at reposense.RepoSense.main(RepoSense.java:52)
 
-Aug 01, 2024 4:19:15 PM reposense.git.GitConfig getGlobalGitLfsConfig
+Aug 13, 2024 12:17:01 PM reposense.git.GitConfig getGlobalGitLfsConfig
 WARNING: Could not get global git lfs config
 java.lang.RuntimeException: reposense.system.CommandRunnerProcessException: Error returned from command git config --global --list on path . :
 fatal: unable to read config file '/home/runner/.gitconfig': No such file or directory
@@ -27,23 +27,23 @@ fatal: unable to read config file '/home/runner/.gitconfig': No such file or dir
 	at reposense.system.CommandRunner.runCommand(CommandRunner.java:21)
 	... 3 more
 
-Aug 01, 2024 4:19:15 PM reposense.report.RepoCloner spawnCloneProcess
+Aug 13, 2024 12:17:01 PM reposense.report.RepoCloner spawnCloneProcess
 INFO: Cloning in parallel from https://github.com/reposense/RepoSense.git...
-Aug 01, 2024 4:19:15 PM reposense.report.RepoCloner waitForCloneProcess
+Aug 13, 2024 12:17:01 PM reposense.report.RepoCloner waitForCloneProcess
 INFO: Waiting for cloning of https://github.com/reposense/RepoSense.git to complete...
-Aug 01, 2024 4:19:21 PM reposense.report.RepoCloner waitForCloneProcess
+Aug 13, 2024 12:17:06 PM reposense.report.RepoCloner waitForCloneProcess
 INFO: Cloning of https://github.com/reposense/RepoSense.git completed!
-Aug 01, 2024 4:19:21 PM reposense.report.ReportGenerator analyzeRepos
+Aug 13, 2024 12:17:06 PM reposense.report.ReportGenerator analyzeRepos
 INFO: [1/1] Analyzing https://github.com/reposense/RepoSense.git (master)...
-Aug 01, 2024 4:19:21 PM reposense.authorship.FileInfoExtractor extractTextFileInfos
+Aug 13, 2024 12:17:06 PM reposense.authorship.FileInfoExtractor extractTextFileInfos
 INFO: Extracting relevant file info from https://github.com/reposense/RepoSense.git (master)...
-Aug 01, 2024 4:19:21 PM reposense.commits.CommitInfoExtractor extractCommitInfos
+Aug 13, 2024 12:17:07 PM reposense.commits.CommitInfoExtractor extractCommitInfos
 INFO: Extracting commits info for https://github.com/reposense/RepoSense.git (master)...
-Aug 01, 2024 4:19:22 PM reposense.commits.CommitInfoAnalyzer analyzeCommits
+Aug 13, 2024 12:17:07 PM reposense.commits.CommitInfoAnalyzer analyzeCommits
 INFO: Analyzing commits info for https://github.com/reposense/RepoSense.git (master)...
-Aug 01, 2024 4:19:22 PM reposense.report.ReportGenerator analyzeRepo
+Aug 13, 2024 12:17:07 PM reposense.report.ReportGenerator analyzeRepo
 INFO: Analysis of https://github.com/reposense/RepoSense.git (master) completed!
-Aug 01, 2024 4:19:22 PM reposense.report.ReportGenerator generateReposReport
+Aug 13, 2024 12:17:07 PM reposense.report.ReportGenerator generateReposReport
 INFO: The report is generated at /home/runner/work/publish-RepoSense/publish-RepoSense/reposense-report
-Aug 01, 2024 4:19:22 PM reposense.RepoSense main
-INFO: Elapsed processing time: 6.91 second(s)
+Aug 13, 2024 12:17:07 PM reposense.RepoSense main
+INFO: Elapsed processing time: 6.53 second(s)
