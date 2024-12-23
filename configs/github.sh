@@ -7,3 +7,5 @@ DEPLOY_KEY_NAME="DEPLOY_KEY"
 ENV_NAME="GitHub secrets"
 GIT_USERNAME="Deployment Bot (GitHub)"
 GIT_EMAIL="deploy@github.com"
+REPO_NAME=$(basename "$GITHUB_REPOSITORY")
+VITE_BASE_DIR="/$REPO_NAME/"
