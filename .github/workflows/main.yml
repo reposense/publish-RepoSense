@@ -20,6 +20,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: pip install requests
+    - name: Set environment variables
+      run: bash ./configs/github.sh
     - name: Generate report
       run: bash ./run.sh
     - name: Deploy GitHub pages
