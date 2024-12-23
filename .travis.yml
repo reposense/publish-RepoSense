@@ -2,6 +2,10 @@ language: java
 
 dist: xenial
 
+python: "3.x"
+
+install: pip install requests
+
 script: ./run.sh
 
 deploy:
