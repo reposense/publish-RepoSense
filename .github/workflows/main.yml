@@ -32,3 +32,5 @@ jobs:
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
         commit_message: Rebuild pages at 
+    - name: Sanity check
+      run: echo "VITE_BASE_DIR:$VITE_BASE_DIR"
