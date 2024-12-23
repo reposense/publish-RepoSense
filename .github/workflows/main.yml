@@ -20,10 +20,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: pip install requests
-    - name: Set environment variables
-      run: bash ./configs/github.sh
     - name: Generate report
-      run: bash ./run.sh
+      run: bash ./configs/github.sh && ./run.sh
     - name: Deploy GitHub pages
       uses: peaceiris/actions-gh-pages@v3
       with:
@@ -32,5 +30,3 @@ jobs:
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
         commit_message: Rebuild pages at 
-    - name: Sanity check
-      run: echo "VITE_BASE_DIR:$VITE_BASE_DIR"

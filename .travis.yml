@@ -2,7 +2,9 @@ language: java
 
 dist: xenial
 
-script: ./run.sh
+script:
+  - . ./configs/travis.sh
+  - ./run.sh  
 
 deploy:
   skip_cleanup: true
