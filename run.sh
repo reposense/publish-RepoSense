@@ -9,7 +9,7 @@
 ### ./get-reposense.py --commit abc123         # Gets a specific commit
 ### ./get-reposense.py --release --overwrite   # Overwrite RepoSense.jar, if exists, with the latest release
 
-./get-reposense.py --commit d726113fc3aa6a262b0db6fcffc0bfac7969057e
+./get-reposense.py --master
 
 # Executes RepoSense
 # Do not change the default output folder name (reposense-report)
