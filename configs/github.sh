@@ -8,9 +8,7 @@
 # GIT_USERNAME="Deployment Bot (GitHub)"
 # GIT_EMAIL="deploy@github.com"
 
-if [ -z "$GITHUB_REPOSITORY" ]; then
-  export VITE_BASE_DIR=""  # Set to undefined (empty)
-else
+if [ -n "$GITHUB_REPOSITORY" ]; then
   REPO_NAME=$(basename "$GITHUB_REPOSITORY")
   export VITE_BASE_DIR="/$REPO_NAME/"
 fi

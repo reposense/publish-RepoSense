@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: pip install requests
     - name: Generate report
-      run: bash ./configs/github.sh && ./run.sh
+      run: bash -c "source ./configs/github.sh && ./run.sh"
     - name: Deploy GitHub pages
       uses: peaceiris/actions-gh-pages@v3
       with:
