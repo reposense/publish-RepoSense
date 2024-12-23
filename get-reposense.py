@@ -16,11 +16,31 @@ def parse_args():
     group.add_argument('-r', '--release', action='store_true', help='Get RepoSense.jar from the latest release (Stable)')
     group.add_argument('-m', '--master', action='store_true', help='Get RepoSense.jar from the latest master (Beta)')
     group.add_argument('-t', '--tag', help='Get RepoSense.jar of a specific release version tag')
+    group.add_argument('-l', '--latest', help='Get RepoSense.jar of the latest release of a specific version tag')
     group.add_argument('-c', '--commit', help='Get RepoSense.jar of a specific commit')
 
     parser.add_argument('-o', '--overwrite', action='store_true', help='Overwrite RepoSense.jar file, if exists. Default: false')
 
     return parser.parse_args()
+
+def handle_latest_tag(tag):
+    page = 1
+    major = tag.strip('. ').split('.')
+    while True:
+        response = requests.get(f'https://api.github.com/repos/reposense/RepoSense/releases?per_page=100&page={page}')
+        if response.status_code in [403, 500]:
+            print('GitHub API has exceed the rate limit.')
+            exit(1)
+        releases = response.json()
+        if not releases:
+            print('Error, the provided tag does not exist!')
+            exit(1)
+        for i in releases:
+            release_tag = i['tag_name']
+            if release_tag.strip('. ').split('.')[:len(major)] == major:
+                handle_specific_release(release_tag)
+                exit()
+        page += 1
 
 def handle_specific_commit(commit):
     get_reposense_jar('https://api.github.com/repos/reposense/RepoSense/commits/' + commit, commit=commit)
@@ -91,6 +111,10 @@ if __name__ == "__main__":
 
     if args.tag:
         handle_specific_release(args.tag)
+        exit()
+    
+    if args.latest:
+        handle_latest_tag(args.latest)
         exit()
 
     if args.commit:
