@@ -2,13 +2,13 @@ language: java
 
 dist: xenial
 
-python: "3.x"
+python: "3.7"
 
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y libssl-dev
+# before_install:
+#   - sudo apt-get update
+#   - sudo apt-get install -y libssl-dev
 
-install: pip install requests
+install: pip install requests==2.25.1  
 
 script: ./run.sh
 
