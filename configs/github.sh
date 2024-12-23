@@ -9,10 +9,10 @@
 # GIT_EMAIL="deploy@github.com"
 
 if [ -z "$GITHUB_REPOSITORY" ]; then
-  VITE_BASE_DIR=  # Set to undefined (empty)
+  export VITE_BASE_DIR=""  # Set to undefined (empty)
 else
   REPO_NAME=$(basename "$GITHUB_REPOSITORY")
-  VITE_BASE_DIR="/$REPO_NAME/"
+  export VITE_BASE_DIR="/$REPO_NAME/"
 fi
 
 echo "VITE_BASE_DIR:$VITE_BASE_DIR"
