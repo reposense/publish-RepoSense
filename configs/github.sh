@@ -14,3 +14,5 @@ else
   REPO_NAME=$(basename "$GITHUB_REPOSITORY")
   VITE_BASE_DIR="/$REPO_NAME/"
 fi
+
+echo "VITE_BASE_DIR:$VITE_BASE_DIR"
