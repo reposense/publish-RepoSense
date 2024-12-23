@@ -9,5 +9,3 @@ DEPLOY_KEY_NAME="GITHUB_DEPLOY_KEY"
 ENV_NAME="Travis"
 GIT_USERNAME="Deployment Bot (Travis)"
 GIT_EMAIL="deploy@travis-ci.org"
-REPO_NAME=$(basename "$TRAVIS_REPO_SLUG")
-VITE_BASE_DIR="/$REPO_NAME/"
