@@ -16,12 +16,31 @@ def parse_args():
     group.add_argument('-r', '--release', action='store_true', help='Get RepoSense.jar from the latest release (Stable)')
     group.add_argument('-m', '--master', action='store_true', help='Get RepoSense.jar from the latest master (Beta)')
     group.add_argument('-t', '--tag', help='Get RepoSense.jar of a specific release version tag')
+    group.add_argument('-l', '--latest', help='Get RepoSense.jar of the latest release of a specific version tag')
     group.add_argument('-c', '--commit', help='Get RepoSense.jar of a specific commit')
-    group.add_argument('-b', '--branch', help='Get RepoSense.jar from a specific branch')
 
     parser.add_argument('-o', '--overwrite', action='store_true', help='Overwrite RepoSense.jar file, if exists. Default: false')
 
     return parser.parse_args()
+
+def handle_latest_tag(tag):
+    page = 1
+    major = tag.strip('. ').split('.')
+    while True:
+        response = requests.get(f'https://api.github.com/repos/reposense/RepoSense/releases?per_page=100&page={page}')
+        if response.status_code in [403, 500]:
+            print('GitHub API has exceed the rate limit.')
+            exit(1)
+        releases = response.json()
+        if not releases:
+            print('Error, the provided tag does not exist!')
+            exit(1)
+        for i in releases:
+            release_tag = i['tag_name']
+            if release_tag.strip('. ').split('.')[:len(major)] == major:
+                handle_specific_release(release_tag)
+                exit()
+        page += 1
 
 def handle_specific_commit(commit):
     get_reposense_jar('https://api.github.com/repos/reposense/RepoSense/commits/' + commit, commit=commit)
@@ -31,9 +50,6 @@ def handle_specific_release(tag):
 
 def handle_latest_release():
     get_reposense_jar('https://api.github.com/repos/reposense/RepoSense/releases/latest')
-
-def handle_specific_branch(branch):
-    clone_and_make_reposense(branch=branch)
 
 def get_reposense_jar(url, tag=None, commit=None):
     response = requests.get(url)
@@ -47,7 +63,7 @@ def get_reposense_jar(url, tag=None, commit=None):
         exit(1)
 
     if response.status_code in [403, 500]:
-        print('GitHub API has exceeded the rate limit. Falling back to alternative method...')
+        print('GitHub API has exceed the rate limit. Falling back to alternative method...')
         clone_and_make_reposense(tag=tag, commit=commit)
         return
 
@@ -58,7 +74,7 @@ def get_reposense_jar(url, tag=None, commit=None):
     url = response.json()['assets'][0]['browser_download_url']
     download_file(url)
 
-def clone_and_make_reposense(tag=None, commit=None, branch=None):
+def clone_and_make_reposense(tag=None, commit=None):
 
     # Cleanup cached RepoSense folder
     shutil.rmtree('RepoSense', ignore_errors=True)
@@ -69,12 +85,10 @@ def clone_and_make_reposense(tag=None, commit=None, branch=None):
     cd RepoSense &&
     '''
 
-    if branch:
-        command += f'git checkout {branch} &&'
-    elif tag:
-        command += f'git checkout tags/{tag} -b deploy &&'
+    if tag:
+        command += 'git checkout tags/{} -b deploy &&'.format(tag)
     elif commit:
-        command += f'git checkout {commit} -b deploy &&'
+        command +=  'git checkout {} -b deploy &&'.format(commit)
 
     command += \
     '''
@@ -98,13 +112,13 @@ if __name__ == "__main__":
     if args.tag:
         handle_specific_release(args.tag)
         exit()
+    
+    if args.latest:
+        handle_latest_tag(args.latest)
+        exit()
 
     if args.commit:
         handle_specific_commit(args.commit)
-        exit()
-
-    if args.branch:
-        handle_specific_branch(args.branch)
         exit()
 
     if args.master:
