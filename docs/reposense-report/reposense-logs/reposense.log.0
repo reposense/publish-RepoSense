@@ -1,0 +1,66 @@
+Jan 20, 2025 12:55:15 PM reposense.system.LogsManager addFileHandler
+信息: Log temp folder has been successfully created
+Jan 20, 2025 12:55:15 PM reposense.RepoSense main
+警告: usage: java -jar RepoSense.jar [--help] [--version]
+                               [--ignore-standalone-config]
+                               [--ignore-filesize-limit] [--view [PATH]]
+                               [--output PATH] [--assets PATH]
+                               [--since dd/MM/yyyy] [--until dd/MM/yyyy]
+                               [--period PERIOD]
+                               [--formats [FORMAT [FORMAT ...]]]
+                               [--timezone ZONE_ID[±hh[mm]]]
+                               [--find-previous-authors]
+                               [--analyze-authorship]
+                               [--originality-threshold (0.0 ~ 1.0)]
+                               [--test-mode] [--fresh-cloning]
+                               [--config PATH |
+                               --repo LOCATION [LOCATION ...]]
+                               [--last-modified-date | --shallow-cloning]
+argument --repo/--repos/-r: not allowed with argument --config/-c
+
+reposense.parser.exceptions.ParseException: usage: java -jar RepoSense.jar [--help] [--version]
+                               [--ignore-standalone-config]
+                               [--ignore-filesize-limit] [--view [PATH]]
+                               [--output PATH] [--assets PATH]
+                               [--since dd/MM/yyyy] [--until dd/MM/yyyy]
+                               [--period PERIOD]
+                               [--formats [FORMAT [FORMAT ...]]]
+                               [--timezone ZONE_ID[±hh[mm]]]
+                               [--find-previous-authors]
+                               [--analyze-authorship]
+                               [--originality-threshold (0.0 ~ 1.0)]
+                               [--test-mode] [--fresh-cloning]
+                               [--config PATH |
+                               --repo LOCATION [LOCATION ...]]
+                               [--last-modified-date | --shallow-cloning]
+argument --repo/--repos/-r: not allowed with argument --config/-c
+
+	at reposense.parser.ArgsParser.parse(ArgsParser.java:305)
+	at reposense.RepoSense.main(RepoSense.java:45)
+
+Jan 20, 2025 12:55:15 PM reposense.system.LogsManager moveLogFileToOutputFolder
+警告: Log output folder was not set
+Jan 20, 2025 12:56:09 PM reposense.report.RepoCloner spawnCloneProcess
+信息: Cloning in parallel from https://github.com/Golddirio/HacknRoll2025...
+Jan 20, 2025 12:56:09 PM reposense.report.RepoCloner waitForCloneProcess
+信息: Waiting for cloning of https://github.com/Golddirio/HacknRoll2025 to complete...
+Jan 20, 2025 12:56:10 PM reposense.report.RepoCloner waitForCloneProcess
+信息: Cloning of https://github.com/Golddirio/HacknRoll2025 completed!
+Jan 20, 2025 12:56:10 PM reposense.report.ReportGenerator analyzeRepos
+信息: [1/1] Analyzing https://github.com/Golddirio/HacknRoll2025 (main)...
+Jan 20, 2025 12:56:11 PM reposense.report.ReportGenerator updateRepoConfig
+信息: https://github.com/Golddirio/HacknRoll2025 (main) does not contain a standalone config file.
+Jan 20, 2025 12:56:11 PM reposense.report.ReportGenerator updateAuthorList
+信息: https://github.com/Golddirio/HacknRoll2025 (main) has no authors specified, using all authors by default.
+Jan 20, 2025 12:56:11 PM reposense.authorship.FileInfoExtractor extractTextFileInfos
+信息: Extracting relevant file info from https://github.com/Golddirio/HacknRoll2025 (main)...
+Jan 20, 2025 12:56:12 PM reposense.commits.CommitInfoExtractor extractCommitInfos
+信息: Extracting commits info for https://github.com/Golddirio/HacknRoll2025 (main)...
+Jan 20, 2025 12:56:13 PM reposense.commits.CommitInfoAnalyzer analyzeCommits
+信息: Analyzing commits info for https://github.com/Golddirio/HacknRoll2025 (main)...
+Jan 20, 2025 12:56:13 PM reposense.report.ReportGenerator analyzeRepo
+信息: Analysis of https://github.com/Golddirio/HacknRoll2025 (main) completed!
+Jan 20, 2025 12:56:13 PM reposense.report.ReportGenerator generateReposReport
+信息: The report is generated at E:\School-Work-4-Y2S2\CS3281\RepoSense-user-experiment-cyx\.\docs\reposense-report
+Jan 20, 2025 12:56:13 PM reposense.RepoSense main
+信息: Elapsed processing time: 3.95 second(s)
