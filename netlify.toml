@@ -1,6 +1,6 @@
 [build]
   command = """
-  get https://download.java.net/java/ga/jdk11/openjdk-11_linux-x64_bin.tar.gz &&
+  wget https://download.java.net/java/ga/jdk11/openjdk-11_linux-x64_bin.tar.gz &&
   tar -xvzf openjdk-11_linux-x64_bin.tar.gz &&
   mv jdk-11 ~/openjdk11 &&
   export JAVA_HOME=$HOME/openjdk11 &&
