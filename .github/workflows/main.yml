@@ -3,7 +3,7 @@ name: CI
 on: 
   push:
     branches:
-      - vite-update
+      - master
 # For scheduled deployment with Cron Jobs.
 ## Examples of cron schedule expressions:
 ### '0 * * * *': hourly
