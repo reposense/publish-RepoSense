@@ -21,7 +21,9 @@ jobs:
     - name: Install dependencies
       run: pip install requests
     - name: Generate report
-      run: bash -c "source ./configs/build-github.sh && ./run.sh"
+      env:
+        VITE_BASE_DIR: "/$(basename $GITHUB_REPOSITORY)/"
+      run: bash -c "echo 'VITE_BASE_DIR: $VITE_BASE_DIR' && ./run.sh"
     - name: Deploy GitHub pages
       uses: peaceiris/actions-gh-pages@v3
       with:
