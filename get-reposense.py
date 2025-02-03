@@ -127,3 +127,4 @@ if __name__ == "__main__":
 
     # If no arguments are provided or --release
     handle_latest_release()
+    
