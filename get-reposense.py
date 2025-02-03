@@ -65,7 +65,7 @@ def clone_and_make_reposense(tag=None, commit=None, branch=None):
 
     command = \
     '''
-    git clone 'https://github.com/reposense/RepoSense.git' &&
+    git clone 'https://github.com/sopa301/RepoSense.git' &&
     cd RepoSense &&
     '''
 
