@@ -9,13 +9,11 @@
 ### ./get-reposense.py --commit abc123         # Gets a specific commit
 ### ./get-reposense.py --release --overwrite   # Overwrite RepoSense.jar, if exists, with the latest release
 
-echo "VITE_BASE_DIR inside run.sh: $VITE_BASE_DIR"
-
-./get-reposense.py --branch 2176-vite
+./get-reposense.py --release
 
 # Executes RepoSense
 # Do not change the default output folder name (reposense-report)
 ## Examples of other valid options; For more, please view the user guide
 ### java -jar RepoSense.jar --repos https://github.com/reposense/RepoSense.git
 
-java -jar RepoSense.jar --config ./configs
+java -jar RepoSense.jar
