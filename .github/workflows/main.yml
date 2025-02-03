@@ -21,9 +21,8 @@ jobs:
     - name: Install dependencies
       run: pip install requests
     - name: Generate report
-      env:
-        VITE_BASE_DIR: "/$(basename $GITHUB_REPOSITORY)/"
       run: |
+        VITE_BASE_DIR: "/$(basename $GITHUB_REPOSITORY)/"
         echo "VITE_BASE_DIR: $VITE_BASE_DIR"
         ./run.sh
     - name: Deploy GitHub pages
