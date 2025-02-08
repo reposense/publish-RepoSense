@@ -2,7 +2,14 @@ language: java
 
 dist: xenial
 
-script: ./run.sh
+python: "3.7"
+
+install: pip install requests==2.25.1  
+
+script:
+  - export VITE_BASE_DIR="/$(basename $TRAVIS_REPO_SLUG)/"
+  - echo "VITE_BASE_DIR: $VITE_BASE_DIR"
+  - ./run.sh
 
 deploy:
   skip_cleanup: true
