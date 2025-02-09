@@ -1,6 +1,7 @@
 name: CI
 
-on: 
+on:
+  pull_request:
   push:
     branches:
       - master
@@ -13,23 +14,27 @@ on:
 #     - cron:  '0 0 * * *'
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Install dependencies
       run: pip install requests
+
     - name: Generate report
       run: |
         export VITE_BASE_DIR="/$(basename $GITHUB_REPOSITORY)/"
         echo "VITE_BASE_DIR: $VITE_BASE_DIR"
         ./run.sh
+
     - name: Deploy GitHub pages
+      if : github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./reposense-report
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: Rebuild pages at 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reposense-report
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: Rebuild pages at ${{ github.sha }}
