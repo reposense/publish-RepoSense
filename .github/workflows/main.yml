@@ -29,12 +29,14 @@ jobs:
         ./run.sh
 
   Test:
+    needs: Build
     runs-on: ubuntu-22.04
     steps:
     - name: Predeployment test
       run: bash ./test.sh
 
   Deploy:
+    needs: Test
     runs-on: ubuntu-22.04
     if: github.event_name == 'push'
     steps:
