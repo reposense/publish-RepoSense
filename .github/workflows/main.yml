@@ -16,7 +16,7 @@ on:
 #     - cron:  '0 0 * * *'
 
 jobs:
-  Build:
+  Test:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
@@ -27,19 +27,23 @@ jobs:
         export VITE_BASE_DIR="/$(basename $GITHUB_REPOSITORY)/"
         echo "VITE_BASE_DIR: $VITE_BASE_DIR"
         ./run.sh
-
-  Test:
-    needs: Build
-    runs-on: ubuntu-22.04
-    steps:
     - name: Predeployment test
       run: bash ./test.sh
+    - name: Upload Report Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: reposense-report
+        path: ./reposense-report
 
   Deploy:
     needs: Test
     runs-on: ubuntu-22.04
-    if: github.event_name == 'push'
     steps:
+    - name: Download Report Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: reposense-report
+        path: ./reposense-report
     - name: Deploy GitHub pages
       uses: peaceiris/actions-gh-pages@v3
       with:
