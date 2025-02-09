@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 # For scheduled deployment with Cron Jobs.
 ## Examples of cron schedule expressions:
 ### '0 * * * *': hourly
@@ -13,9 +16,8 @@ on:
 #     - cron:  '0 0 * * *'
 
 jobs:
-  deploy:
+  Build:
     runs-on: ubuntu-22.04
-
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
@@ -25,8 +27,17 @@ jobs:
         export VITE_BASE_DIR="/$(basename $GITHUB_REPOSITORY)/"
         echo "VITE_BASE_DIR: $VITE_BASE_DIR"
         ./run.sh
+
+  Test:
+    runs-on: ubuntu-22.04
+    steps:
     - name: Predeployment test
       run: bash ./test.sh
+
+  Deploy:
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push'
+    steps:
     - name: Deploy GitHub pages
       uses: peaceiris/actions-gh-pages@v3
       with:
