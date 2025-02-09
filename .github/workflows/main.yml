@@ -16,7 +16,7 @@ on:
 #     - cron:  '0 0 * * *'
 
 jobs:
-  Test:
+  test:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
@@ -35,10 +35,10 @@ jobs:
         name: reposense-report
         path: ./reposense-report
 
-  Deploy:
-    needs: Test
+  deploy:
+    needs: test
     runs-on: ubuntu-22.04
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
     - name: Download Report Artifact
       uses: actions/download-artifact@v4
