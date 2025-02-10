@@ -46,6 +46,12 @@ jobs:
         user_email: 'github-actions[bot]@users.noreply.github.com'
         commit_message: Rebuild pages at
 
+    - name: Test remote URL
+      run: curl -L https://${USERNAME}.github.io/${REPONAME}/
+      env:
+        USERNAME: ${{github.repository_owner}}
+        REPONAME: ${{github.event.repository.name}} 
+
     - name: Test deployed web page
       if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/deployment-test')
       uses: treosh/lighthouse-ci-action@v12
