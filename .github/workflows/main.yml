@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - deployment-test
 # For scheduled deployment with Cron Jobs.
 ## Examples of cron schedule expressions:
 ### '0 * * * *': hourly
