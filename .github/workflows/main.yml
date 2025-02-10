@@ -50,8 +50,8 @@ jobs:
       if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/deployment-test')
       uses: treosh/lighthouse-ci-action@v12
       with:
-        urls: https://${USERNAME}.github.io/${REPO_NAME}
+        urls: https://${USERNAME}.github.io/${REPONAME}/
         budgetPath: ./budgets.json
       env:
         USERNAME: ${{github.repository_owner}}
-        REPO_NAME: ${{github.event.repository.name}} 
+        REPONAME: ${{github.event.repository.name}} 
