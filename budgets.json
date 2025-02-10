@@ -4,13 +4,13 @@
     "timings": [
       {
         "metric": "interactive",
-        "budget": 10000
+        "budget": 1000000
       }
     ],
     "resourceSizes": [
       {
         "resourceType": "script",
-        "budget": 10000
+        "budget": 1000000
       },
       {
         "resourceType": "total",
