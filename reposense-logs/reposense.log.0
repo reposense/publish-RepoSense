@@ -1,19 +1,19 @@
-Feb 09, 2025 8:56:11 AM reposense.system.LogsManager addFileHandler
+Feb 10, 2025 4:41:10 AM reposense.system.LogsManager addFileHandler
 INFO: Log temp folder has been successfully created
-Feb 09, 2025 8:56:11 AM reposense.parser.ArgsParser parse
+Feb 10, 2025 4:41:10 AM reposense.parser.ArgsParser parse
 INFO: Config path not provided, using the config folder as default.
-Feb 09, 2025 8:56:11 AM reposense.parser.CsvParser validateHeader
+Feb 10, 2025 4:41:10 AM reposense.parser.CsvParser validateHeader
 INFO: Parsed header of CSV file, repo-config.csv, and recognized columns: Ignore Standalone Config,  Repository's Location,  Skip Ignored File Analysis,  Branch,  Shallow Cloning,  File formats,  Ignore Glob List,  Ignore Authors List,  Find Previous Authors,  File Size Limit,  Ignore File Size Limit,  Ignore Commits List
-Feb 09, 2025 8:56:11 AM reposense.parser.CsvParser validateHeader
+Feb 10, 2025 4:41:10 AM reposense.parser.CsvParser validateHeader
 INFO: Parsed header of CSV file, author-config.csv, and recognized columns: Author's Emails,  Repository's Location,  Branch,  Author's Git Host ID,  Author's Display Name,  Ignore Glob List,  Author's Git Author Name
-Feb 09, 2025 8:56:11 AM reposense.model.ConfigRunConfiguration getRepoConfigurations
+Feb 10, 2025 4:41:10 AM reposense.model.ConfigRunConfiguration getRepoConfigurations
 WARNING: No valid configurations in the author-config.csv.
 reposense.parser.exceptions.InvalidCsvException: No valid configurations in the author-config.csv.
 	at reposense.parser.CsvParser.parse(CsvParser.java:115)
 	at reposense.model.ConfigRunConfiguration.getRepoConfigurations(ConfigRunConfiguration.java:50)
 	at reposense.RepoSense.main(RepoSense.java:52)
 
-Feb 09, 2025 8:56:11 AM reposense.git.GitConfig getGlobalGitLfsConfig
+Feb 10, 2025 4:41:10 AM reposense.git.GitConfig getGlobalGitLfsConfig
 WARNING: Could not get global git lfs config
 java.lang.RuntimeException: reposense.system.CommandRunnerProcessException: Error returned from command git config --global --list on path . :
 fatal: unable to read config file '/home/runner/.gitconfig': No such file or directory
@@ -29,23 +29,23 @@ fatal: unable to read config file '/home/runner/.gitconfig': No such file or dir
 	at reposense.system.CommandRunner.runCommand(CommandRunner.java:21)
 	... 3 more
 
-Feb 09, 2025 8:56:12 AM reposense.report.RepoCloner spawnCloneProcess
+Feb 10, 2025 4:41:10 AM reposense.report.RepoCloner spawnCloneProcess
 INFO: Cloning in parallel from https://github.com/reposense/RepoSense.git...
-Feb 09, 2025 8:56:12 AM reposense.report.RepoCloner waitForCloneProcess
+Feb 10, 2025 4:41:10 AM reposense.report.RepoCloner waitForCloneProcess
 INFO: Waiting for cloning of https://github.com/reposense/RepoSense.git to complete...
-Feb 09, 2025 8:56:16 AM reposense.report.RepoCloner waitForCloneProcess
+Feb 10, 2025 4:41:15 AM reposense.report.RepoCloner waitForCloneProcess
 INFO: Cloning of https://github.com/reposense/RepoSense.git completed!
-Feb 09, 2025 8:56:16 AM reposense.report.ReportGenerator analyzeRepos
+Feb 10, 2025 4:41:15 AM reposense.report.ReportGenerator analyzeRepos
 INFO: [1/1] Analyzing https://github.com/reposense/RepoSense.git (master)...
-Feb 09, 2025 8:56:16 AM reposense.authorship.FileInfoExtractor extractTextFileInfos
+Feb 10, 2025 4:41:15 AM reposense.authorship.FileInfoExtractor extractTextFileInfos
 INFO: Extracting relevant file info from https://github.com/reposense/RepoSense.git (master)...
-Feb 09, 2025 8:56:17 AM reposense.commits.CommitInfoExtractor extractCommitInfos
+Feb 10, 2025 4:41:16 AM reposense.commits.CommitInfoExtractor extractCommitInfos
 INFO: Extracting commits info for https://github.com/reposense/RepoSense.git (master)...
-Feb 09, 2025 8:56:17 AM reposense.commits.CommitInfoAnalyzer analyzeCommits
+Feb 10, 2025 4:41:16 AM reposense.commits.CommitInfoAnalyzer analyzeCommits
 INFO: Analyzing commits info for https://github.com/reposense/RepoSense.git (master)...
-Feb 09, 2025 8:56:17 AM reposense.report.ReportGenerator analyzeRepo
+Feb 10, 2025 4:41:16 AM reposense.report.ReportGenerator analyzeRepo
 INFO: Analysis of https://github.com/reposense/RepoSense.git (master) completed!
-Feb 09, 2025 8:56:17 AM reposense.report.ReportGenerator generateReposReport
+Feb 10, 2025 4:41:16 AM reposense.report.ReportGenerator generateReposReport
 INFO: The report is generated at /home/runner/work/publish-RepoSense/publish-RepoSense/reposense-report
-Feb 09, 2025 8:56:17 AM reposense.RepoSense main
-INFO: Elapsed processing time: 5.83 second(s)
+Feb 10, 2025 4:41:16 AM reposense.RepoSense main
+INFO: Elapsed processing time: 5.97 second(s)
