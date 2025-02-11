@@ -34,9 +34,25 @@ jobs:
         export VITE_BASE_DIR="/$(basename $GITHUB_REPOSITORY)/"
         echo "VITE_BASE_DIR: $VITE_BASE_DIR"
         ./run.sh
+    
+    - name: Upload report artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: reposense-report
+        path: ./reposense-report
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/deployment-test')
+    steps:
+    - name: Download Report Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: reposense-report
+        path: ./reposense-report
+    
     - name: Deploy GitHub pages
-      if : github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/deployment-test')
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -45,21 +61,19 @@ jobs:
         user_email: 'github-actions[bot]@users.noreply.github.com'
         commit_message: Rebuild pages at
 
-    - name: Test remote URL
+    - name: Test connection to remote URL
       run: curl -L https://${USERNAME}.github.io/${REPONAME}/
       env:
         USERNAME: ${{github.repository_owner}}
         REPONAME: ${{github.event.repository.name}} 
 
     - name: Test deployed web page
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: treosh/lighthouse-ci-action@v12
       with:
         urls: https://${{github.repository_owner}}.github.io/${{github.event.repository.name}} 
         uploadArtifacts: true
 
     - name: Display Lighthouse Summary
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: cat .lighthouseci/manifest.json | jq '.'
 
     
