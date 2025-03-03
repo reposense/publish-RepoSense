@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - '**'
 
 jobs:
   build:
@@ -28,12 +28,32 @@ jobs:
         echo "VITE_BASE_DIR: $VITE_BASE_DIR"
         ./run.sh
 
-    - name: Deploy GitHub page
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./reposense-report
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: Rebuild pages at
+        name: reposense-report
+        path: ./reposense-report
+
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: reposense-report
+          path: ./reposense-report
+
+      - name: Deploy GitHub pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reposense-report
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: Rebuild pages at
