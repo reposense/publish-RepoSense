@@ -4,7 +4,14 @@ on:
   pull_request:
   push:
     branches:
-      - '**'
+      - master
+  # For scheduled deployment with Cron Jobs.
+  ## Examples of cron schedule expressions:
+  ### '0 * * * *': hourly
+  ### '0 0 * * *': daily
+  ### '0 0 1 * *': monthly
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -38,7 +45,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-24.04
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'schedule'
 
     steps:
       - uses: actions/checkout@v3
