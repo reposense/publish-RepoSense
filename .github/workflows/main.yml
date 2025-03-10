@@ -10,8 +10,8 @@ on:
   ### '0 * * * *': hourly
   ### '0 0 * * *': daily
   ### '0 0 1 * *': monthly
-  schedule:
-    - cron: '0 0 * * *'
+  # schedule:
+  ##  - cron: '0 0 * * *'
 
 jobs:
   build:
