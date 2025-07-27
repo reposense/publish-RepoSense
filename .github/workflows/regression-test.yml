@@ -16,14 +16,16 @@ jobs:
       - name: Log Trigger Info
         run: |
           echo "Trigger Info:"
-          echo "Triggered by PR #${{ github.event.client_payload.pr}}"
-          echo "Testing SHU: ${{ github.event.client_payload.sha }}"
+          echo "Triggered by PR #${{ github.event.client_payload.pr || 'N/A' }}"
+          echo "Testing SHA: ${{ github.event.client_payload.sha || github.sha }}"
 
-      - name: Checkout RepoSense @ SHA
+      - name: Checkout RepoSense repository @ SHA
         uses: actions/checkout@v3
         with:
+          repository: feliciahmq/RepoSense
           ref: ${{ github.event.client_payload.sha }}
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: reposense
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -76,6 +78,7 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew run
+        working-directory: reposense
 
       - name: Run local website on action runner
         run: |
