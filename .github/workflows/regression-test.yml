@@ -22,7 +22,7 @@ jobs:
       - name: Checkout RepoSense repository @ SHA
         uses: actions/checkout@v3
         with:
-          repository: feliciahmq/RepoSense
+          repository: reposense/RepoSense
           ref: ${{ github.event.client_payload.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           path: reposense
