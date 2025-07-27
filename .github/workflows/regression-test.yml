@@ -74,11 +74,11 @@ jobs:
         run: chmod +x reposense/gradlew
 
       - name: Build with Gradle
-        run: ./gradlew run
         working-directory: reposense
+        run: ./gradlew run
 
       - name: Set SITE path to built report
-        run: echo "SITE=${{ github.workspace }}/reposense/build/report" >> $GITHUB_ENV
+        run: echo "SITE=${{ github.workspace }}/reposense/reposense-report" >> $GITHUB_ENV
 
       - name: Run local website on action runner
         run: |
