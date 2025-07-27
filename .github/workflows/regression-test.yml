@@ -35,12 +35,6 @@ jobs:
       - name: Install Jekyll
         run: gem install jekyll
 
-      - name: Initialize Jekyll site
-        run: |
-          jekyll new --skip-bundle ${{ github.workspace }}/reposense-report
-        env:
-          JEKYLL_ENV: production
-
       - name: Set up Vite environment
         run: |
           export VITE_BASE_DIR="/$(basename $GITHUB_REPOSITORY)"
@@ -83,14 +77,19 @@ jobs:
         run: ./gradlew run
         working-directory: reposense
 
+      - name: Set SITE path to built report
+        run: echo "SITE=${{ github.workspace }}/reposense/build/report" >> $GITHUB_ENV
+
       - name: Run local website on action runner
         run: |
           gem install bundler
           cd ${SITE}
+          bundle init
+          bundle add jekyll
           bundle install
           bundle exec jekyll serve --detach
         env:
-          SITE: ${{github.workspace}}/reposense-report
+          SITE: ${{ env.SITE }}
 
       - name: Wait for the service to start
         run: sleep 10
